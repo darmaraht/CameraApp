@@ -153,6 +153,7 @@ final class CameraVC: UIViewController {
     // MARK: Private Methods
     
     private func configureCameraManager() {
+        cameraManager.zoomControl = zoomControl
         cameraManager.onPhotoCaptured = { [weak self] image in
             self?.updateLastPhotoButton(with: image)
         }

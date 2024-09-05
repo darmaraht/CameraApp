@@ -13,7 +13,7 @@ import CoreLocation
 final class CameraManager: NSObject, CLLocationManagerDelegate {
     
     private var qrCodeFrameView: UIView?
-
+    
     // MARK: Properties
     
     private var captureSession: AVCaptureSession!
@@ -29,6 +29,7 @@ final class CameraManager: NSObject, CLLocationManagerDelegate {
     private var currentLocation: CLLocation?
     
     private var zoomFactor: CGFloat = 1.0
+    weak var zoomControl: UISegmentedControl?
     
     enum CameraPosition {
         case front
@@ -205,6 +206,19 @@ final class CameraManager: NSObject, CLLocationManagerDelegate {
         }
     }
     
+    @objc
+    private func handlePinchGesture(_ gesture: UIPinchGestureRecognizer) {
+        let maxZoomFactor: CGFloat = 6.0
+        let minZoomFactor: CGFloat = 1.0
+        
+        let newZoomFactor = zoomFactor * gesture.scale
+        let clampedZoomFactor = min(max(newZoomFactor, minZoomFactor), maxZoomFactor)
+        
+        setZoomLevel(to: clampedZoomFactor)
+        
+        gesture.scale = 1.0
+    }
+    
     func setZoomLevel(to factor: CGFloat) {
         guard let device = currentCamera else {
             print("Камера недоступна")
@@ -220,22 +234,31 @@ final class CameraManager: NSObject, CLLocationManagerDelegate {
             onZoomLevelChanged?(clampedFactor)
             print("Уровень зума установлен на: \(clampedFactor)")
             device.unlockForConfiguration()
+            
+            updateZoomControlSegment(for: clampedFactor)
+            
         } catch {
             print("Ошибка при установке уровня зума: \(error.localizedDescription)")
         }
     }
     
-    @objc 
-    private func handlePinchGesture(_ gesture: UIPinchGestureRecognizer) {
-        let maxZoomFactor: CGFloat = 9.0
-        let minZoomFactor: CGFloat = 1.0
+    private func updateZoomControlSegment(for zoomFactor: CGFloat) {
+        let segmentIndex: Int
         
-        let newZoomFactor = zoomFactor * gesture.scale
-        let clampedZoomFactor = min(max(newZoomFactor, minZoomFactor), maxZoomFactor)
+        switch zoomFactor {
+        case 1.0..<1.5:
+            segmentIndex = 0
+        case 1.5..<2.5:
+            segmentIndex = 1
+        case 2.5...6.0:
+            segmentIndex = 2
+        default:
+            segmentIndex = 0
+        }
         
-        setZoomLevel(to: clampedZoomFactor)
-        
-        gesture.scale = 1.0
+        DispatchQueue.main.async {
+            self.zoomControl?.selectedSegmentIndex = segmentIndex
+        }
     }
     
     // MARK: - CLLocationManagerDelegate
