@@ -12,11 +12,13 @@ import SnapKit
 class ViewController: UIViewController {
     
     // MARK: Subviews
-
+    
     private var photoCollectionView: UICollectionView!
+    private var transition = ZoomTransition()
+    fileprivate var index: IndexPath = IndexPath()
     
     // MARK: Properties
-
+    
     private var photos: [PHAsset] = [] // Храним PHAsset, а не UIImage
     private var fetchResult: PHFetchResult<PHAsset>!
     private let imageManager = PHImageManager.default()
@@ -26,7 +28,7 @@ class ViewController: UIViewController {
     private var isLoading = false
     
     // MARK: Life cycle
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -77,7 +79,7 @@ class ViewController: UIViewController {
     private func setupFetchOptions() {
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
     }
-
+    
     private func requestPhotoLibraryAccess() {
         PHPhotoLibrary.requestAuthorization { [weak self] status in
             guard let self = self else { return }
@@ -185,6 +187,7 @@ extension ViewController: UICollectionViewDataSource {
 
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        self.index = indexPath
         if indexPath.row == 0 {
             let cameraVC = CameraVC()
             cameraVC.modalPresentationStyle = .fullScreen
@@ -196,7 +199,8 @@ extension ViewController: UICollectionViewDelegate {
                 
                 let fullscreenPhotoVC = FullscreenPhotoVC()
                 fullscreenPhotoVC.image = image
-                fullscreenPhotoVC.modalPresentationStyle = .fullScreen
+                fullscreenPhotoVC.modalPresentationStyle = .custom
+                fullscreenPhotoVC.transitioningDelegate = self
                 self.present(fullscreenPhotoVC, animated: true, completion: nil)
             }
         }
@@ -206,10 +210,33 @@ extension ViewController: UICollectionViewDelegate {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         let scrollViewHeight = scrollView.frame.size.height
-
+        
         if offsetY > contentHeight - scrollViewHeight * 2 {
             loadPhotos()
         }
     }
     
+}
+
+// MARK: - UIViewControllerTransitioningDelegate
+
+extension ViewController: UIViewControllerTransitioningDelegate {
+    func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+        
+        transition.transitionMode = .present
+        if let cell = photoCollectionView.cellForItem(at: index) {
+            let cellCenterInSuperview = cell.superview?.convert(cell.center, to: photoCollectionView.superview)
+            transition.startingPoint = cellCenterInSuperview ?? cell.center
+        }
+        return transition
+    }
+    
+    func animationController(forDismissed dismissed: UIViewController) -> (any UIViewControllerAnimatedTransitioning)? {
+        transition.transitionMode = .dismiss
+        if let cell = photoCollectionView.cellForItem(at: index) {
+            let cellCenterInSuperview = cell.superview?.convert(cell.center, to: photoCollectionView.superview)
+            transition.startingPoint = cellCenterInSuperview ?? cell.center
+        }
+        return transition
+    }
 }

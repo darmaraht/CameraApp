@@ -18,6 +18,7 @@
 		073FD4B42C787403009F88C2 /* CameraVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073FD4B32C787403009F88C2 /* CameraVC.swift */; };
 		073FD4B62C78781E009F88C2 /* FullscreenPhotoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073FD4B52C78781E009F88C2 /* FullscreenPhotoVC.swift */; };
 		073FD4B82C78D87C009F88C2 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 073FD4B72C78D87C009F88C2 /* CameraManager.swift */; };
+		07F510E82C88623C0016E522 /* ZoomTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F510E72C88623C0016E522 /* ZoomTransition.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		073FD4B32C787403009F88C2 /* CameraVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraVC.swift; sourceTree = "<group>"; };
 		073FD4B52C78781E009F88C2 /* FullscreenPhotoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenPhotoVC.swift; sourceTree = "<group>"; };
 		073FD4B72C78D87C009F88C2 /* CameraManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		07F510E72C88623C0016E522 /* ZoomTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomTransition.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 				073FD4AA2C78633D009F88C2 /* ViewControllers */,
 				073FD4AB2C786357009F88C2 /* Views */,
 				073FD4B92C7C8F73009F88C2 /* CameraService */,
+				07F510E62C8861F10016E522 /* Helper */,
 				073FD49F2C786278009F88C2 /* Assets.xcassets */,
 				073FD4A12C786278009F88C2 /* LaunchScreen.storyboard */,
 				073FD4A42C786278009F88C2 /* Info.plist */,
@@ -103,6 +106,14 @@
 				073FD4B72C78D87C009F88C2 /* CameraManager.swift */,
 			);
 			path = CameraService;
+			sourceTree = "<group>";
+		};
+		07F510E62C8861F10016E522 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				07F510E72C88623C0016E522 /* ZoomTransition.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -186,6 +197,7 @@
 				073FD4B82C78D87C009F88C2 /* CameraManager.swift in Sources */,
 				073FD4B62C78781E009F88C2 /* FullscreenPhotoVC.swift in Sources */,
 				073FD4B22C786B25009F88C2 /* PhotoCell.swift in Sources */,
+				07F510E82C88623C0016E522 /* ZoomTransition.swift in Sources */,
 				073FD49B2C786277009F88C2 /* ViewController.swift in Sources */,
 				073FD4972C786277009F88C2 /* AppDelegate.swift in Sources */,
 				073FD4992C786277009F88C2 /* SceneDelegate.swift in Sources */,
